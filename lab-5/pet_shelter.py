@@ -5,7 +5,11 @@ import sqlite3
 logger = logging.getLogger(__name__)
 
 conn = sqlite3.connect(":memory:")
-conn.execute("CREATE TABLE pets (id INTEGER PRIMARY KEY, name TEXT, species TEXT, age INTEGER, adopted INTEGER)")
+conn.execute(
+    "CREATE TABLE pets ("
+    "id INTEGER PRIMARY KEY, name TEXT, species TEXT, "
+    "age INTEGER, adopted INTEGER)"
+)
 adoption_count = 0
 
 
@@ -29,11 +33,12 @@ def adoptionCode():
 
 
 def oldestAvailable():
-    try:
-        row = conn.execute("SELECT name, age FROM pets WHERE adopted = 0 ORDER BY age DESC").fetchone()
-        return row[0]
-    except:
+    row = conn.execute(
+        "SELECT name, age FROM pets WHERE adopted = 0 ORDER BY age DESC"
+    ).fetchone()
+    if row is None:
         return None
+    return row[0]
 
 
 def clearUnadopted():
@@ -44,7 +49,8 @@ def clearUnadopted():
 
 
 def shelterStatus():
-    if adoption_count > 0: return "active"
+    if adoption_count > 0:
+        return "active"
     return "quiet"
 
 
